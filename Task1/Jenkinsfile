@@ -1,23 +1,25 @@
 pipeline {
     agent any
     stages {
-        stage('Init') {
+        stage('Build Images') {
             steps {
-                sh 'docker rm -f $(docker ps -qa) || true'
-                sh 'docker network create new-network || true'
+                sh 'docker build -t task1-flask-app Task1'
+                sh 'docker build -t task1-nginx -f Task1/Dockerfile.nginx Task1'
             }
         }
-        stage('Build') {
+        stage('Deploy Containers') {
             steps {
-                sh 'docker build -t flask-app .'
-                sh 'docker build -t mynginx -f Dockerfile.nginx .'
+                sh "docker network create task1-net || true"
+                sh "docker rm -f \$(docker ps -aq) || true"
+                sh "docker run -d --network task1-net --name flask-app -e YOUR_NAME=Jenkins task1-flask-app"
+                sh "docker run -d -p 80:80 --name nginx task1-nginx"
+        }
             }
         }
-        stage('Deploy') {
-            steps {
-                sh 'docker run -d --name flask-app --network new-network flask-app:latest'
-                sh 'docker run -d -p 80:80 --name mynginx --network new-network mynginx:latest'
-            }
+    post {
+        always {
+            cleanWs()
+        
         }
     }
 }
