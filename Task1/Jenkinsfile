@@ -12,7 +12,7 @@ pipeline {
                 sh "docker network create task1-net || true"
                 sh "docker rm -f \$(docker ps -aq) || true"
                 sh "docker run -d --network task1-net --name flask-app -e YOUR_NAME=Jenkins task1-flask-app"
-                sh "docker run -d -p 80:80 --name nginx task1-nginx"
+                sh "docker run -d -p 80:80 --name nginx --network task1-net task1-nginx"
             }
         }
         // stage() {
