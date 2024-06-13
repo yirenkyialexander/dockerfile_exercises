@@ -4,7 +4,7 @@ pipeline {
         stage('Build Images') {
             steps {
                 sh "docker build -t task1-flask-app Task1"
-                sh "docker build -t task1-nginx -f Dockerfile.nginx Task1"
+                sh "docker build -t task1-nginx -f Task1/Dockerfile.nginx Task1"
             }
         }
         stage('Deploy Containers') {
