@@ -2,4 +2,8 @@ Flask==2.1.0
 Flask-SQLAlchemy==2.5.1
 SQLAlchemy==1.3.18
 PyMySQL==0.10.0
+<<<<<<< HEAD
 werkzeug==2.3.7
+=======
+Werkzeug==2.3.7
+>>>>>>> f5291f0e1825c38f8670ae886f18ac14580068b9
