@@ -1,0 +1,26 @@
+pipeline {
+    stages {
+        stage('Build Images') {
+            steps {
+                sh "docker build -t task1-flask-app Task1"
+                sh "docker build -t task1-nginx -f Dockerfile.nginx Task1"
+            }
+        }
+        stage('Deploy Containers') {
+            steps {
+                sh "docker network create task1-net || true"
+                sh "docker rm -f \$(docker ps -aq) || true"
+                sh "docker run -d --network task1-net --name flask-app -e YOUR_NAME=Jenkins task1-flask-app"
+                sh "docker run -d -p 80:80 --name nginx task1-nginx"
+            }
+        }
+        // stage() {
+        //     steps {}
+        // }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
